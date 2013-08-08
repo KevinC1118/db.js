@@ -138,7 +138,7 @@
             }
             db.close();
             closed = true;
-            delete dbCache[ name ];
+            dbCache[ name ] = null;
         };
 
         this.get = function ( table , id ) {
