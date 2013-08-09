@@ -166,6 +166,29 @@
             return new IndexQuery( table , db , index );
         };
 
+        this.clear = function ( table ) {
+            if ( closed ) {
+                throw 'Database has been closed';
+            }
+
+            var transaction = db.transaction( table , transactionModes.readwrite ),
+                store = transaction.objectStore( table ),
+                deferred = Deferred();
+            
+            var req = store.clear();
+            req.onsuccess = function ( e ) {
+                console.log(e);
+            };
+
+            transaction.oncomplete = function ( ) {
+                deferred.resolve();
+            };
+            transaction.onerror = function ( e ) {
+                deferred.reject( e );
+            };
+            return deferred.promise();
+        }
+
         this.drop = function () {
             var deferred = Deferred(),
                 dbName = db.name,
@@ -186,7 +209,7 @@
                 deferred.reject(e);
             };
             return deferred.promise();
-        }
+        };
 
         for ( var i = 0 , il = db.objectStoreNames.length ; i < il ; i++ ) {
             (function ( storeName ) {
