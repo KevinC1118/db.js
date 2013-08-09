@@ -166,6 +166,28 @@
             return new IndexQuery( table , db , index );
         };
 
+        this.drop = function () {
+            var deferred = Deferred(),
+                dbName = db.name,
+                req;
+
+            if (!closed) {
+                this.close();
+            }
+
+            req = indexedDB.deleteDatabase( dbName );
+            req.onsuccess = function ( e ) {
+                deferred.resolve(dbName);
+            };
+            req.onerror = function ( e ) {
+                deferred.reject(e);
+            };
+            req.onblocked = function (e) {
+                deferred.reject(e);
+            };
+            return deferred.promise();
+        }
+
         for ( var i = 0 , il = db.objectStoreNames.length ; i < il ; i++ ) {
             (function ( storeName ) {
                 that[ storeName ] = { };
