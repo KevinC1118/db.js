@@ -215,7 +215,7 @@
             (function ( storeName ) {
                 that[ storeName ] = { };
                 for ( var i in that ) {
-                    if ( !hasOwn.call( that , i ) || i === 'close' ) {
+                    if ( !hasOwn.call( that , i ) || i === 'close' || i === 'drop' ) {
                         continue;
                     }
                     that[ storeName ][ i ] = (function ( i ) {
